@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Desert Detailing Studio — DDS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════
+   COLOUR PALETTE — extracted from DDS logo
+   · Deep burnt orange  #C8581A
+   · Warm amber         #E8820C
+   · Sandy gold         #F5A030
+   · Dusty sunset       #D4773A
+   · Sky blue-grey      #6B8CA8  (logo background sky)
+   · Desert sand        #BFA882
+   · Off-white          #F5EFE6
+   · True black         #0A0A0A
+   · Deep charcoal      #121212
+   · Mid charcoal       #1E1E1E
+════════════════════════════════════════ */
+:root{
+  --black:#0A0A0A;
+  --deep:#121212;
+  --charcoal:#1A1A1A;
+  --mid:#242424;
+  --graphite:#2E2E2E;
+  --border:rgba(232,130,12,0.14);
+  --border2:rgba(232,130,12,0.28);
+
+  /* Logo-extracted amber ramp */
+  --a1:#F5A030;   /* sandy gold  */
+  --a2:#E8820C;   /* warm amber  */
+  --a3:#C8581A;   /* burnt orange*/
+  --a4:#D4773A;   /* dusty sunset*/
+
+  --white:#F5EFE6;
+  --off:#C8B99A;
+  --muted:#7A6E63;
+  --sand:#BFA882;
+
+  --font-display:'Bebas Neue',sans-serif;
+  --font-serif:'Cormorant Garamond',serif;
+  --font-body:'DM Sans',sans-serif;
+  --nav-h:70px;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:var(--font-body);
+  font-weight:300;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;object-fit:cover}
+button{border:none;background:none;cursor:pointer;font-family:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--a2);border-radius:2px}
+
+/* ── PAGE TRANSITIONS ── */
+.page{display:none}
+.page.active{display:block;animation:pgIn .55s var(--ease) both}
+@keyframes pgIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── NAVBAR ── */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(16px,4vw,64px);
+  background:rgba(10,10,10,.9);
+  backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid var(--border);
+  transition:.35s var(--ease);
+}
+.nav-logo{display:flex;align-items:center;gap:12px;cursor:pointer}
+.nav-logo img{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--a2);object-fit:cover}
+.nav-brand{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.14em;line-height:1}
+.nav-brand span{color:var(--a2)}
+.nav-menu{display:flex;align-items:center;gap:clamp(12px,2vw,32px);list-style:none}
+.nav-menu button{
+  font-size:.85rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--off);transition:color .2s;padding:4px 0;position:relative;
+}
+.nav-menu button.active{color:var(--a2)}
+.nav-menu button::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;
+  background:var(--a2);transform:scaleX(0);transition:transform .3s;transform-origin:left;
+}
+.nav-menu button.active::after{transform:scaleX(1)}
+.nav-menu button:hover{color:var(--a1)}
+.nav-menu button:hover::after{transform:scaleX(1)}
+.nav-socials{display:flex;align-items:center;gap:12px}
+.nav-socials a{color:var(--muted);transition:color .2s;display:flex;align-items:center;width:26px;height:26px}
+.nav-socials a:hover{color:var(--a2)}
+.nav-socials svg{width:15px;height:15px;fill:currentColor}
+.nav-right{display:flex;align-items:center;gap:18px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--white);transition:.3s}
+@media(max-width:768px){
+  .hamburger{display:flex}
+  .nav-menu{
+    display:none;position:fixed;top:var(--nav-h);left:0;right:0;
+    background:rgba(10,10,10,.98);flex-direction:column;gap:0;padding:16px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .nav-menu.open{display:flex}
+  .nav-menu button{width:100%;padding:14px 24px;text-align:left;font-size:.9rem}
+  .nav-socials{display:none}
+  .hero{padding-top:calc(var(--nav-h) - 92px)}
+  .hero-content{transform:translateY(-56px) !important}
+  .hero-badge{bottom:calc(100px + 72px)}
+}
+
+/* Mobile responsive font sizes */
+@media(max-width:480px){
+  .hero{padding-top:calc(var(--nav-h) - 32px)}
+  .hero-content{padding-top:8px}
+  .hero-eyebrow{margin-bottom:8px}
+  .tag{font-size:.7rem;letter-spacing:.2em}
+  .hero-eyebrow{font-size:.7rem;letter-spacing:.28em}
+  .hero-desc{font-size:.95rem}
+  .btn-primary,.btn-outline{font-size:.65rem;letter-spacing:.08em;padding:7px 14px}
+  .stat-n{font-size:1.8rem}
+  .stat-l{font-size:.65rem;letter-spacing:.14em}
+  .scard-desc,.addon-desc,.pcard-desc,.stage-desc,.wcard-desc{font-size:.85rem}
+  .scard-arrow,.sblock-tag,.wcard-loc{font-size:.68rem;letter-spacing:.16em}
+  .sub-desc,.about-para,.process-hero p,.contact-hero-text p{font-size:.95rem}
+  .cd-label{font-size:.68rem;letter-spacing:.16em}
+  .cd-val,.ci-val{font-size:.9rem}
+  .ci-head{font-size:.68rem;letter-spacing:.14em}
+  footer p{font-size:.78rem}
+}
+
+/* ── SOCIAL SIDEBAR ── */
+.social-sidebar{
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:900;
+  display:flex;flex-direction:column;gap:8px;
+  padding:8px;
+  background:linear-gradient(165deg,rgba(26,26,26,.92),rgba(12,12,12,.85));
+  border:1px solid var(--border);
+  border-radius:28px;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+  backdrop-filter:blur(14px) saturate(1.2);
+}
+.social-sidebar a{
+  display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(28,28,28,.95),rgba(16,16,16,.9));
+  color:var(--off);
+  border:1px solid rgba(232,130,12,.12);
+  transition:transform .25s var(--ease),background .25s,color .25s,box-shadow .25s,border-color .25s;
+}
+.social-sidebar a:hover{
+  background:linear-gradient(145deg,rgba(232,130,12,.95),rgba(200,88,26,.95));
+  color:var(--black);
+  border-color:rgba(232,130,12,.5);
+  box-shadow:0 10px 26px rgba(232,130,12,.25);
+  transform:translateX(-4px);
+}
+.social-sidebar svg{width:22px;height:22px;fill:currentColor;stroke:currentColor}
+
+@media(max-width:600px){
+  .social-sidebar{right:8px;padding:6px;gap:6px;border-radius:20px}
+  .social-sidebar a{width:42px;height:42px;border-radius:12px}
+  .social-sidebar svg{width:16px;height:16px}
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--deep);border-top:1px solid var(--border);
+  padding:32px clamp(16px,4vw,64px);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  margin-top:80px;
+}
+.footer-logo{display:flex;align-items:center;gap:10px}
+.footer-logo img{width:34px;height:34px;border-radius:50%;border:1px solid var(--a2)}
+.footer-brand{font-family:var(--font-display);font-size:1.15rem;letter-spacing:.12em}
+.footer-brand span{color:var(--a2)}
+footer p{font-size:.85rem;color:var(--muted);letter-spacing:.05em}
+
+/* ── GOOGLE BUSINESS PROFILE ── */
+.gbp-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:linear-gradient(135deg,rgba(66,133,244,0.15),rgba(234,67,53,0.1),rgba(251,188,5,0.15));border:1px solid rgba(66,133,244,0.4);border-radius:8px;text-decoration:none;transition:all .3s ease;position:relative;overflow:hidden}
+.gbp-badge::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(66,133,244,0.2),rgba(234,67,53,0.15),rgba(251,188,5,0.2));opacity:0;transition:opacity .3s ease}
+.gbp-badge:hover{transform:translateY(-2px);border-color:rgba(66,133,244,0.7);box-shadow:0 4px 20px rgba(66,133,244,0.25)}
+.gbp-badge:hover::before{opacity:1}
+.gbp-badge svg{width:18px;height:18px;flex-shrink:0;position:relative;z-index:1}
+.gbp-badge .gbp-text{font-size:.72rem;font-weight:500;letter-spacing:.08em;color:var(--a2);position:relative;z-index:1}
+.gbp-badge .gbp-dot{width:6px;height:6px;background:#34A853;border-radius:50%;position:relative;z-index:1;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.2)}}
+
+
+/* ── BUTTONS ── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 26px;background:transparent;border:1px solid var(--a2);color:var(--a2);
+  font-size:.8rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  transition:all .3s var(--ease);cursor:pointer;position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;background:var(--a2);transform:translateX(-101%);transition:transform .35s var(--ease);z-index:-1;
+}
+.btn-primary:hover{
+  color:var(--black);transform:translateY(-2px);box-shadow:0 4px 20px rgba(232,130,12,.35);
+}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 34px;border:1px solid var(--a2);color:var(--a2);
+  font-size:.85rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  transition:all .25s;cursor:pointer;
+}
+.btn-outline:hover{background:rgba(232,130,12,.1);transform:translateY(-2px)}
+
+/* ── SHARED LABELS ── */
+.tag{
+  font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--a2);display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.tag::before{content:'';width:28px;height:1px;background:var(--a2)}
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.2rem,5vw,3.8rem);
+  letter-spacing:.04em;line-height:.95;color:var(--white);margin-bottom:14px;
+}
+.section-sub{
+  font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(.95rem,1.8vw,1.2rem);color:var(--off);margin-bottom:40px;
+}
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(to right,transparent,var(--a3),transparent);
+}
+
+/* ════════════════════════════════════════
+   HOME ─ HERO
+════════════════════════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;overflow:hidden;
+  padding-top:var(--nav-h);
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(105deg,rgba(10,10,10,.96) 0%,rgba(10,10,10,.7) 45%,rgba(10,10,10,.85) 100%),
+    url('assets/images/main.jpeg') center/cover no-repeat;
+}
+.hero-bg::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:240px;
+  background:linear-gradient(transparent,var(--black));
+}
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(232,130,12,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(232,130,12,.025) 1px,transparent 1px);
+  background-size:72px 72px;
+}
+/* Angled amber accent slice */
+.hero-slice{
+  position:absolute;right:0;top:0;bottom:0;width:38%;
+  background:linear-gradient(105deg,transparent 30%,rgba(200,88,26,.06) 100%);
+  clip-path:polygon(20% 0,100% 0,100% 100%,0% 100%);
+  pointer-events:none;
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 clamp(16px,6vw,100px);max-width:860px;
+}
+.hero-eyebrow{
+  font-size:.8rem;letter-spacing:.38em;text-transform:uppercase;color:var(--a2);
+  margin-bottom:22px;opacity:0;animation:rUp .8s .15s both;
+}
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(3.6rem,10vw,8.5rem);
+  line-height:.88;letter-spacing:.02em;
+  opacity:0;animation:rUp .9s .3s both;
+}
+.hero-title .hi{color:var(--a2)}
+.hero-title .stroke{-webkit-text-stroke:1.5px var(--white);color:transparent}
+.hero-desc{
+  font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(1.1rem,2.2vw,1.45rem);color:var(--off);
+  max-width:500px;margin:28px 0 44px;
+  opacity:0;animation:rUp .9s .45s both;
+}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:rUp .9s .6s both}
+/* Spinning badge */
+.hero-badge{
+  position:absolute;right:clamp(64px,7vw,120px);bottom:100px;z-index:2;
+  width:112px;height:112px;border-radius:50%;
+  border:1px solid rgba(232,130,12,.35);
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 30% 30%,rgba(245,160,48,.35),rgba(232,130,12,.05) 55%,transparent 60%),
+    linear-gradient(155deg,rgba(24,24,24,.95),rgba(10,10,10,.85));
+  box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 18px rgba(232,130,12,.25);
+  animation:spin 22s linear infinite;
+}
+.hero-badge::before{
+  content:'';position:absolute;inset:8px;border-radius:50%;
+  border:1px dashed rgba(245,160,48,.35);
+  box-shadow:inset 0 0 12px rgba(232,130,12,.2);
+}
+.hero-badge-inner{
+  font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--a1);text-align:center;line-height:1.9;
+  text-shadow:0 2px 10px rgba(232,130,12,.35);
+  animation:spinR 22s linear infinite;
+}
+@keyframes rUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinR{to{transform:rotate(-360deg)}}
+
+/* ── IMAGE STRIP (hero bottom) ── */
+.hero-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  background:var(--black);
+}
+.hero-strip-img{
+  aspect-ratio:4/3;overflow:hidden;position:relative;
+}
+.hero-strip-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.7) saturate(.9);
+  transition:filter .4s,transform .4s;
+}
+.hero-strip-img:hover img{filter:brightness(.9) saturate(1.1);transform:scale(1.04)}
+.hero-strip-img .strip-label{
+  position:absolute;bottom:14px;left:16px;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--a1);font-weight:500;
+}
+@media(max-width:600px){.hero-strip{grid-template-columns:repeat(2,1fr)}}
+
+/* ── STATS ── */
+.stats-strip{
+  background:var(--a2);padding:0;
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.stat{
+  padding:24px 20px;text-align:center;
+  border-right:1px solid rgba(10,10,10,.12);
+}
+.stat:last-child{border-right:none}
+.stat-n{font-family:var(--font-display);font-size:2.4rem;color:var(--black);line-height:1}
+.stat-l{font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(10,10,10,.65);margin-top:4px}
+@media(max-width:480px){.stats-strip{grid-template-columns:repeat(3,1fr)}}
+
+/* ── SERVICE CARDS ── */
+.services-section{padding:80px clamp(16px,4vw,64px);background:var(--deep)}
+.services-header{text-align:center;margin-bottom:60px}
+.cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:2px;background:var(--border);
+}
+.scard{
+  background:var(--charcoal);cursor:pointer;
+  position:relative;overflow:hidden;transition:background .3s;
+}
+.scard:hover{background:var(--mid)}
+.scard-img{
+  width:100%;aspect-ratio:16/9;overflow:hidden;
+}
+.scard-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(.8);transition:filter .4s,transform .5s}
+.scard:hover .scard-img img{filter:brightness(.75) saturate(1);transform:scale(1.06)}
+.scard-body{padding:28px 28px 32px}
+.scard-num{font-family:var(--font-display);font-size:3rem;line-height:1;color:rgba(232,130,12,.15);margin-bottom:10px}
+.scard-title{font-family:var(--font-display);font-size:1.65rem;letter-spacing:.05em;margin-bottom:8px}
+.scard-desc{font-size:.95rem;color:var(--muted);line-height:1.7}
+.scard-arrow{
+  margin-top:20px;display:flex;align-items:center;gap:8px;
+  font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a2);
+}
+.scard-arrow svg{width:13px;transition:transform .2s}
+.scard:hover .scard-arrow svg{transform:translateX(5px)}
+.scard::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--a2);transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.scard:hover::after{transform:scaleX(1)}
+
+/* ── HOME: WHY DDS ── */
+.why-section{
+  padding:80px clamp(16px,4vw,64px);
+  background:radial-gradient(circle at 12% 12%,rgba(232,130,12,.06),transparent 55%),var(--deep);
+}
+.why-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+.why-card{
+  background:linear-gradient(155deg,rgba(26,26,26,.95),rgba(16,16,16,.9));
+  border:1px solid var(--border);border-radius:16px;
+  padding:26px 24px;position:relative;overflow:hidden;
+  transition:transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
+}
+.why-card::after{
+  content:'';position:absolute;inset:auto -30% -30% auto;width:140px;height:140px;
+  background:radial-gradient(circle,rgba(232,130,12,.2),transparent 70%);
+  opacity:.6;
+}
+.why-card:hover{transform:translateY(-6px);border-color:var(--border2);box-shadow:0 18px 36px rgba(0,0,0,.3)}
+.why-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(232,130,12,.12);border:1px solid var(--border);
+  color:var(--a2);margin-bottom:16px;
+}
+.why-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+.why-title{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.05em;margin-bottom:8px}
+.why-desc{font-size:.95rem;color:var(--muted);line-height:1.75}
+
+/* ── HOME: PROCESS PREVIEW ── */
+.process-preview{
+  padding:80px clamp(16px,4vw,64px);
+  background:
+    radial-gradient(circle at 85% 10%,rgba(232,130,12,.1),transparent 55%),
+    linear-gradient(180deg,rgba(18,18,18,.96),rgba(10,10,10,.98));
+}
+.process-steps{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+}
+.pstep{
+  background:var(--charcoal);border:1px solid var(--border);
+  border-radius:16px;padding:26px 24px;position:relative;overflow:hidden;
+  transition:transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
+}
+.pstep:hover{transform:translateY(-6px);border-color:var(--border2);box-shadow:0 18px 32px rgba(0,0,0,.26)}
+.pstep-num{
+  width:46px;height:46px;border-radius:50%;
+  background:var(--a2);color:var(--black);font-family:var(--font-display);
+  display:flex;align-items:center;justify-content:center;letter-spacing:.06em;
+  margin-bottom:16px;
+}
+.pstep-title{font-family:var(--font-display);font-size:1.35rem;letter-spacing:.05em;margin-bottom:8px}
+.pstep-desc{font-size:.95rem;color:var(--muted);line-height:1.75}
+.process-cta{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+
+/* ── HOME: GALLERY ── */
+.home-gallery{
+  padding:80px clamp(16px,4vw,64px);
+  background:var(--black);
+}
+.gallery-slider{
+  position:relative;
+  border:1px solid var(--border);
+  border-radius:24px;
+  background:linear-gradient(135deg,rgba(18,18,18,.96),rgba(10,10,10,.92));
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+.gallery-viewport{overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none}
+.gallery-viewport:active{cursor:grabbing}
+.gallery-track{
+  display:flex;
+  transition:transform .6s var(--ease);
+  will-change:transform;
+}
+.gallery-slide{min-width:100%;padding:clamp(18px,3.4vw,36px)}
+.gallery-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
+  gap:clamp(16px,3vw,28px);
+  align-items:stretch;
+}
+.gallery-meta{
+  display:flex;flex-direction:column;gap:12px;
+  padding:clamp(16px,2.6vw,24px);
+  border-radius:18px;
+  background:linear-gradient(160deg,rgba(26,26,26,.95),rgba(12,12,12,.9));
+  border:1px solid var(--border);
+}
+.gallery-kicker{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--a2)}
+.gallery-title{font-family:var(--font-display);font-size:2rem;letter-spacing:.06em;line-height:1}
+.gallery-desc{font-family:var(--font-serif);font-style:italic;color:var(--off);font-size:1.05rem}
+.gallery-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.gallery-tags span{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a1);
+  border:1px solid rgba(232,130,12,.35);
+  padding:6px 10px;border-radius:999px;
+}
+.gallery-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.gallery-frame{
+  position:relative;overflow:hidden;border-radius:18px;
+  border:1px solid rgba(232,130,12,.2);
+  background:var(--deep);
+}
+.gallery-frame img{
+  width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.9);
+  transition:transform .6s var(--ease),filter .6s var(--ease);
+  user-select:none;pointer-events:none;
+}
+.gallery-frame:hover img{filter:brightness(.85) saturate(1);transform:scale(1.04)}
+.gallery-frame figcaption{
+  position:absolute;left:12px;bottom:12px;
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a1);
+  background:rgba(10,10,10,.65);padding:6px 10px;border-radius:999px;
+}
+.gallery-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(12,12,12,.9);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--a2);transition:transform .2s,box-shadow .2s,border-color .2s;
+  z-index:2;
+}
+.gallery-nav svg{width:18px;height:18px;stroke:currentColor}
+.gallery-nav:hover{transform:translateY(-50%) scale(1.05);border-color:var(--border2);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.gallery-nav.prev{left:16px}
+.gallery-nav.next{right:16px}
+.gallery-dots{
+  display:flex;gap:10px;justify-content:center;align-items:center;
+  padding:18px 0 24px;
+}
+.gallery-dots button{
+  width:10px;height:10px;border-radius:999px;background:rgba(245,239,230,.3);
+  transition:transform .2s,background .2s;
+}
+.gallery-dots button.active{background:var(--a2);transform:scale(1.2)}
+@media(max-width:980px){
+  .gallery-card{grid-template-columns:1fr;}
+  .gallery-pair{grid-template-columns:1fr;}
+  .gallery-nav{width:42px;height:42px}
+}
+@media(max-width:600px){
+  .gallery-nav{display:none}
+  .gallery-title{font-size:1.7rem}
+}
+
+/* ── HOME: CTA ── */
+.cta-banner{
+  padding:70px clamp(16px,4vw,64px) 90px;
+  background:radial-gradient(circle at 90% 10%,rgba(232,130,12,.12),transparent 50%),var(--deep);
+}
+.cta-inner{
+  background:linear-gradient(135deg,rgba(24,24,24,.95),rgba(12,12,12,.9));
+  border:1px solid var(--border);border-radius:20px;
+  padding:36px clamp(22px,4vw,46px);
+  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.cta-inner::after{
+  content:'';position:absolute;inset:-40% auto auto -20%;width:220px;height:220px;
+  background:radial-gradient(circle,rgba(232,130,12,.25),transparent 70%);
+}
+.cta-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);letter-spacing:.06em;line-height:1;margin-bottom:10px}
+.cta-desc{font-family:var(--font-serif);font-style:italic;font-size:1.1rem;color:var(--off);max-width:520px}
+.cta-actions{display:flex;gap:14px;flex-wrap:wrap}
+
+/* ════════════════════════════════════════
+   SUB PAGE — common sub-hero
+════════════════════════════════════════ */
+.sub-hero{
+  position:relative;overflow:hidden;
+  padding-top:calc(var(--nav-h) + 70px);
+  padding-bottom:60px;
+  padding-left:clamp(16px,4vw,64px);
+  padding-right:clamp(16px,4vw,64px);
+}
+.sub-hero-bg{
+  position:absolute;inset:0;z-index:0;
+}
+.sub-hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.18) saturate(.6)}
+.sub-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(10,10,10,.95) 40%,rgba(10,10,10,.5) 100%);
+}
+.sub-hero-content{position:relative;z-index:1}
+.sub-title{
+  font-family:var(--font-display);
+  font-size:clamp(3rem,7vw,6rem);
+  letter-spacing:.04em;line-height:.92;margin:10px 0 20px;
+}
+.sub-desc{
+  font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(1.1rem,2vw,1.25rem);color:var(--off);max-width:480px;line-height:1.7;
+}
+
+/* ── SERVICE BLOCKS ── */
+.service-blocks{
+  background:var(--deep);
+  display:flex;flex-direction:column;gap:1px;
+  background-color:rgba(232,130,12,.07);
+}
+.sblock{
+  background:var(--charcoal);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;align-items:stretch;
+  transition:background .3s;
+}
+.sblock:hover{background:var(--mid)}
+.sblock.reverse{direction:rtl}
+.sblock.reverse>*{direction:ltr}
+.sblock-img{overflow:hidden;min-height:280px}
+.sblock-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.9);transition:filter .5s,transform .5s}
+.sblock:hover .sblock-img img{filter:brightness(.8) saturate(1);transform:scale(1.04)}
+.sblock-body{
+  padding:clamp(28px,4vw,56px);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.sblock-num{
+  font-family:var(--font-display);font-size:3.5rem;
+  color:rgba(232,130,12,.18);line-height:1;margin-bottom:14px;
+}
+.sblock-title{font-family:var(--font-display);font-size:1.6rem;letter-spacing:.05em;margin-bottom:10px}
+.sblock-desc{font-size:.95rem;color:var(--muted);line-height:1.8;max-width:420px}
+.sblock-tag{
+  margin-top:22px;display:inline-block;
+  padding:7px 18px;border:1px solid var(--border2);
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);
+  align-self:flex-start;
+}
+@media(max-width:700px){
+  .sblock{grid-template-columns:1fr}
+  .sblock.reverse{direction:ltr}
+  .sblock-img{min-height:200px}
+}
+
+/* ════════════════════════════════════════
+   Services
+════════════════════════════════════════ */
+.services-hero{
+  position:relative;overflow:hidden;
+  padding:calc(var(--nav-h) + 70px) clamp(16px,4vw,64px) 60px;
+}
+.services-hero-bg{position:absolute;inset:0;z-index:0}
+.services-hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.15) saturate(.5)}
+.services-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,10,10,.6),rgba(10,10,10,.97));
+}
+.services-hero-content{position:relative;z-index:1}
+.services-section{padding:40px clamp(16px,4vw,64px) 60px}
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:2px;background:rgba(232,130,12,.07);margin-bottom:60px;
+}
+.services-menu{
+  padding:60px clamp(16px,4vw,64px) 90px;
+  background:radial-gradient(circle at 10% 10%,rgba(232,130,12,.08),transparent 50%),var(--deep);
+  display:flex;flex-direction:column;gap:46px;
+}
+.service-group{
+  position:relative;
+  padding:32px clamp(20px,3vw,36px) 36px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:linear-gradient(140deg,rgba(26,26,26,.95),rgba(18,18,18,.9));
+  overflow:hidden;
+}
+.service-group::before{
+  content:'';position:absolute;inset:-40% auto auto -20%;width:220px;height:220px;
+  background:radial-gradient(circle,rgba(232,130,12,.18),transparent 70%);
+  pointer-events:none;
+}
+.service-group-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
+.service-group-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.8rem,4vw,2.6rem);
+  letter-spacing:.08em;
+}
+.service-group-note{
+  font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);
+}
+.service-grid-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.service-tile{
+  position:relative;
+  aspect-ratio:2/1;
+  min-height:200px;
+  border-radius:18px;
+  border:1px solid rgba(232,130,12,.15);
+  background:var(--charcoal);
+  overflow:hidden;
+  display:flex;align-items:flex-end;
+  padding:22px;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease);
+}
+.service-tile::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,10,10,.15),rgba(10,10,10,.85));
+}
+.service-tile-img{
+  position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.6) saturate(.9);
+  transition:transform .6s var(--ease),filter .6s var(--ease);
+}
+.service-tile-content{position:relative;z-index:1}
+.service-tile-title{
+  font-family:var(--font-display);
+  font-size:1.55rem;letter-spacing:.06em;margin-bottom:8px;
+}
+.service-tile-desc{font-size:1.02rem;color:var(--off);line-height:1.65;max-width:360px}
+.service-tile:hover{
+  transform:translateY(-6px);
+  border-color:rgba(232,130,12,.4);
+  box-shadow:0 24px 40px rgba(0,0,0,.35);
+}
+.service-tile:hover .service-tile-img{filter:brightness(.75) saturate(1);transform:scale(1.06)}
+.service-tile:hover::after{background:linear-gradient(180deg,rgba(10,10,10,.05),rgba(10,10,10,.75))}
+@media(max-width:900px){
+  .service-group-head{flex-direction:column;align-items:flex-start}
+  .service-grid-two{grid-template-columns:1fr}
+  .service-tile{aspect-ratio:auto}
+}
+.addon-card{
+  background:var(--charcoal);padding:0;overflow:hidden;
+  transition:background .3s;position:relative;
+}
+.addon-card:hover{background:var(--mid)}
+.addon-card::before{
+  content:'';position:absolute;left:0;top:0;width:2px;height:0;
+  background:var(--a2);transition:height .4s;
+}
+.addon-card:hover::before{height:100%}
+.addon-img{width:100%;aspect-ratio:16/9;overflow:hidden}
+.addon-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.55);transition:filter .4s,transform .4s}
+.addon-card:hover .addon-img img{filter:brightness(.7);transform:scale(1.05)}
+.addon-body{padding:24px 26px 28px}
+.addon-title{font-family:var(--font-display);font-size:1.2rem;letter-spacing:.04em;margin-bottom:8px}
+.addon-desc{font-size:.9rem;color:var(--muted);line-height:1.7}
+
+/* Premium */
+.premium-section{
+  background:var(--deep);padding:60px clamp(16px,4vw,64px);
+  border-top:1px solid var(--border);
+}
+.premium-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;background:rgba(232,130,12,.07)}
+.premium-card{
+  background:var(--charcoal);padding:0;overflow:hidden;
+  transition:background .3s;position:relative;
+}
+.premium-card:hover{background:var(--mid)}
+.premium-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--a3),var(--a1));
+}
+.pcard-img{width:100%;aspect-ratio:16/9;overflow:hidden}
+.pcard-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(.8);transition:filter .4s,transform .4s}
+.premium-card:hover .pcard-img img{filter:brightness(.7) saturate(1);transform:scale(1.05)}
+.pcard-body{padding:28px 28px 32px}
+.pcard-badge{font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--a4);margin-bottom:12px}
+.pcard-title{font-family:var(--font-display);font-size:1.45rem;letter-spacing:.05em;margin-bottom:10px}
+.pcard-desc{font-size:.9rem;color:var(--muted);line-height:1.75}
+
+/* ════════════════════════════════════════
+   PROCESS
+════════════════════════════════════════ */
+.process-hero{
+  position:relative;min-height:60vh;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  overflow:hidden;
+  padding:calc(var(--nav-h) + 60px) clamp(16px,4vw,64px) 60px;
+}
+.process-hero-bg{position:absolute;inset:0;z-index:0}
+.process-hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.15) saturate(.5)}
+.process-hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(rgba(10,10,10,.55),rgba(10,10,10,.95));
+}
+.process-hero-content{position:relative;z-index:1}
+.process-hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2rem,6vw,5.5rem);
+  letter-spacing:.06em;line-height:.95;margin-bottom:20px;
+}
+.process-hero h1 span{color:var(--a2)}
+.process-hero p{font-family:var(--font-serif);font-style:italic;font-size:clamp(1.1rem,2vw,1.3rem);color:var(--off);max-width:480px;margin:0 auto}
+
+.stages-section{padding:80px clamp(16px,4vw,64px)}
+.stage{
+  display:grid;grid-template-columns:56px 200px 1fr;
+  gap:28px;align-items:center;
+  padding:28px 0;border-bottom:1px solid rgba(255,255,255,.04);
+  opacity:0;transform:translateX(-16px);animation:sIn .5s both;
+}
+.stage:nth-child(1){animation-delay:.1s}.stage:nth-child(2){animation-delay:.17s}
+.stage:nth-child(3){animation-delay:.24s}.stage:nth-child(4){animation-delay:.31s}
+.stage:nth-child(5){animation-delay:.38s}.stage:nth-child(6){animation-delay:.45s}
+.stage:nth-child(7){animation-delay:.52s}
+@keyframes sIn{to{opacity:1;transform:none}}
+.stage-n{
+  width:56px;height:56px;display:flex;align-items:center;justify-content:center;
+  background:var(--a2);font-family:var(--font-display);font-size:1.4rem;color:var(--black);
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);flex-shrink:0;
+}
+.stage-img{width:100%;aspect-ratio:3/2;overflow:hidden;flex-shrink:0}
+.stage-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.6);transition:filter .4s}
+.stage:hover .stage-img img{filter:brightness(.8)}
+.stage-body{
+  background:linear-gradient(145deg,rgba(26,26,26,.9),rgba(18,18,18,.8));
+  border:1px solid var(--border);
+  padding:20px 22px;
+  border-radius:14px;
+  box-shadow:0 16px 32px rgba(0,0,0,.22);
+}
+.stage-name{font-family:var(--font-display);font-size:1.4rem;letter-spacing:.05em;margin-bottom:6px}
+.stage-desc{font-size:.92rem;color:var(--muted);line-height:1.75}
+@media(max-width:768px){
+  .stage{grid-template-columns:56px 1fr}
+  .stage-img{display:none}
+}
+
+/* ── PROCESS (interactive drive) ── */
+.process-hero.process-hero--drive{
+  min-height:70vh;
+  align-items:flex-end;
+  text-align:left;
+  padding-bottom:90px;
+}
+.process-hero--drive .process-hero-bg::after{
+  background:linear-gradient(105deg,rgba(10,10,10,.92) 20%,rgba(10,10,10,.55) 70%,rgba(10,10,10,.9) 100%);
+}
+.process-hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(232,130,12,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(232,130,12,.04) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.6;
+}
+.process-hero-content{max-width:760px}
+.process-hero .process-hero-meta{
+  margin-top:20px;
+  font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a1);
+  display:flex;align-items:center;gap:10px;
+}
+.process-hero .process-hero-meta::before{content:'';width:34px;height:1px;background:var(--a1)}
+
+.process-road{
+  padding:90px clamp(16px,4vw,64px);
+  background:radial-gradient(circle at 20% 0%,rgba(232,130,12,.08),transparent 55%),var(--deep);
+}
+.process-intro{max-width:720px;margin-bottom:50px}
+.process-track{position:relative;display:flex;flex-direction:column;gap:10px}
+.process-track::before{
+  content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(232,130,12,.6),transparent);
+  opacity:.6;
+}
+.process-stage{
+  position:relative;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(24px,4vw,70px);
+  align-items:center;
+  padding:48px 0;
+  opacity:0;transform:translateY(26px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);
+}
+.process-stage.in-view{opacity:1;transform:none}
+.stage-copy{
+  background:linear-gradient(145deg,rgba(26,26,26,.9),rgba(18,18,18,.8));
+  border:1px solid var(--border);
+  padding:28px 30px;border-radius:16px;
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+  transition:transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
+  position:relative;
+  z-index:2;
+}
+.stage-kicker{
+  font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--a2);
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.stage-kicker::before{content:'';width:24px;height:1px;background:var(--a2)}
+.stage-title{font-family:var(--font-display);font-size:1.85rem;letter-spacing:.05em;margin-bottom:10px}
+.stage-desc{font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.stage-tags{display:flex;gap:10px;flex-wrap:wrap}
+.stage-tags span{
+  padding:6px 12px;border:1px solid var(--border2);border-radius:999px;
+  font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--a1);
+}
+.stage-visual{display:flex}
+.car-card{
+  width:min(480px,100%);
+  background:linear-gradient(135deg,rgba(30,30,30,.95),rgba(18,18,18,.9));
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+  position:relative;overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+.car-card::before{
+  content:'';position:absolute;inset:-40% 40% auto auto;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(232,130,12,.45),transparent 70%);
+}
+.car-card::after{
+  content:'';position:absolute;inset:0;opacity:0;
+  background:linear-gradient(120deg,transparent 10%,rgba(245,160,48,.25) 50%,transparent 90%);
+  transform:translateX(-120%);
+}
+.car-action{
+  font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);
+  margin-bottom:14px;
+}
+.car-frame{
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid rgba(232,130,12,.2);
+  background:linear-gradient(140deg,rgba(10,10,10,.6),rgba(26,26,26,.8));
+}
+.car-photo{
+  width:100%;height:240px;object-fit:cover;
+  filter:brightness(.85) saturate(.9);
+  transform:scale(1.04);
+  transition:transform .6s var(--ease),filter .6s var(--ease);
+}
+.car-road{
+  position:absolute;left:24px;right:24px;bottom:18px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--a2),transparent);
+  opacity:.6;
+}
+.car-card:hover .car-action{color:var(--a1)}
+.car-card:hover .car-photo{filter:brightness(.95) saturate(1);transform:scale(1.08)}
+.process-stage.in-view .car-card{
+  animation:carLift .7s var(--ease) both;
+}
+.process-stage.in-view .car-card::after{
+  opacity:1;animation:carSweep 1.2s var(--ease) .2s both;
+}
+.process-stage.in-view .car-photo{
+  animation:carDrift .9s var(--ease) .1s both;
+}
+@keyframes carLift{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes carSweep{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+@keyframes carDrift{from{transform:scale(1.06) translateY(6px)}to{transform:scale(1.04) translateY(0)}}
+.process-stage.is-left .stage-copy{text-align:right}
+.process-stage.is-left .stage-tags{justify-content:flex-end}
+.process-stage.is-left .stage-visual{justify-content:flex-end}
+.process-stage.is-right .stage-visual{justify-content:flex-start}
+.process-stage.is-left .stage-copy{order:2}
+.process-stage.is-left .stage-visual{order:1}
+.process-stage:hover .stage-copy{
+  transform:translateY(-6px);
+  border-color:var(--border2);
+  box-shadow:0 22px 44px rgba(0,0,0,.32);
+}
+.process-stage:hover .stage-node{box-shadow:0 0 0 10px rgba(232,130,12,.18)}
+.stage-node{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:14px;height:14px;border-radius:50%;
+  background:var(--black);border:2px solid var(--a2);
+  box-shadow:0 0 0 8px rgba(232,130,12,.12);
+}
+.stage-connector{
+  position:absolute;top:50%;height:1px;
+  width:calc(50% - clamp(140px,20vw,240px));
+  background:linear-gradient(90deg,var(--a2),transparent);
+  transform:scaleX(0);
+  transition:transform .6s var(--ease);
+  z-index:0;
+  pointer-events:none;
+}
+.process-stage.is-left .stage-connector{
+  left:calc(50% + 1px);
+  transform-origin:left;
+}
+.process-stage.is-right .stage-connector{
+  right:calc(50% + 1px);
+  background:linear-gradient(90deg,transparent,var(--a2));
+  transform-origin:right;
+}
+.process-stage.in-view .stage-connector{transform:scaleX(1)}
+@media(max-width:960px){
+  .process-stage{grid-template-columns:1fr;gap:24px}
+  .process-track::before{left:14px}
+  .process-stage{padding-left:28px}
+  .stage-node{left:14px}
+  .stage-connector{left:14px;width:24px;transform-origin:left}
+  .process-stage.is-right .stage-connector{right:auto;background:linear-gradient(90deg,var(--a2),transparent)}
+  .process-stage.is-left .stage-copy,
+  .process-stage.is-right .stage-copy{text-align:left}
+  .process-stage.is-left .stage-tags{justify-content:flex-start}
+  .process-stage.is-left .stage-visual,
+  .process-stage.is-right .stage-visual{justify-content:flex-start}
+  .process-stage.is-left .stage-copy,
+  .process-stage.is-left .stage-visual{order:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .process-stage{opacity:1;transform:none}
+  .stage-connector{transform:none}
+}
+
+/* ════════════════════════════════════════
+   ABOUT
+════════════════════════════════════════ */
+.about-hero{
+  padding-top:calc(var(--nav-h) + 80px);
+  padding-left:clamp(16px,4vw,64px);
+  padding-right:clamp(16px,4vw,64px);
+  padding-bottom:0;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:end;
+}
+.about-text{padding-bottom:60px}
+.about-h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.5rem,6vw,5rem);
+  letter-spacing:.04em;line-height:.9;margin-bottom:24px;
+}
+.about-h1 .stroke{-webkit-text-stroke:1.5px var(--a2);color:transparent}
+.about-h1 .hi{color:var(--a2)}
+.about-para .hi{color:var(--a2)}
+.about-para{
+  font-family:var(--font-serif);font-style:italic;
+  font-size:clamp(1.05rem,1.8vw,1.2rem);color:var(--off);line-height:1.8;max-width:420px;
+}
+.about-tagline{
+  display:block;
+  font-family:var(--font-display);
+  font-style:normal;
+  font-size:1.15rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--off);
+  margin-bottom:10px;
+}
+.about-visual{
+  position:relative;align-self:stretch;min-height:480px;overflow:hidden;
+}
+.about-visual img{width:100%;height:100%;object-fit:cover;filter:brightness(.65) saturate(.9)}
+.about-visual::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:120px;z-index:1;
+  background:linear-gradient(to right,var(--black),transparent);
+}
+.about-visual::after{
+  content:'';position:absolute;bottom:32px;right:32px;
+  width:60px;height:60px;
+  border-bottom:2px solid var(--a2);border-right:2px solid var(--a2);z-index:2;
+}
+@media(max-width:768px){.about-hero{grid-template-columns:1fr}.about-visual{display:none}}
+
+.about-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  background:rgba(232,130,12,.07);margin:0;
+}
+.about-strip-img{overflow:hidden;aspect-ratio:1}
+.about-strip-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(.7);transition:filter .4s,transform .5s}
+.about-strip-img:hover img{filter:brightness(.8) saturate(1);transform:scale(1.06)}
+@media(max-width:600px){.about-strip{grid-template-columns:repeat(2,1fr)}}
+
+.workshops-section{
+  padding:60px clamp(16px,4vw,64px);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:2px;background:rgba(232,130,12,.07);
+}
+.wcard{background:var(--charcoal);overflow:hidden;position:relative;transition:background .3s}
+.wcard:hover{background:var(--mid)}
+.wcard-img{width:100%;aspect-ratio:16/9;overflow:hidden}
+.wcard-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(.7);transition:filter .4s,transform .5s}
+.wcard:hover .wcard-img img{filter:brightness(.65) saturate(.9);transform:scale(1.04)}
+.wcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--a2)}
+.wcard-body{padding:40px 36px}
+.wcard-loc{
+  font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--a2);margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.wcard-loc::before{content:'';width:18px;height:1px;background:var(--a2)}
+.wcard-name{font-family:var(--font-display);font-size:2rem;letter-spacing:.05em;margin-bottom:18px}
+.wcard-desc{font-size:.95rem;color:var(--muted);line-height:1.8}
+
+/* ════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════ */
+.contact-hero{
+  position:relative;overflow:hidden;
+  height:340px;margin-top:var(--nav-h);
+}
+.contact-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.25) saturate(.5)}
+.contact-hero::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,10,10,.4),rgba(10,10,10,.97));
+}
+.contact-hero-text{
+  position:absolute;bottom:48px;left:clamp(16px,4vw,64px);z-index:1;
+}
+.contact-hero-text h1{
+  font-family:var(--font-display);font-size:clamp(2.5rem,6vw,4.5rem);
+  letter-spacing:.04em;line-height:.9;
+}
+.contact-hero-text h1 span{color:var(--a2);display:block}
+.contact-hero-text p{
+  font-family:var(--font-serif);font-style:italic;color:var(--off);font-size:1.5rem;margin-top:12px;
+}
+
+.contact-body{
+  padding:60px clamp(16px,4vw,64px) 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;
+}
+@media(max-width:768px){.contact-body{grid-template-columns:1fr}}
+.contact-details{}
+.cd-item{border-top:1px solid rgba(255,255,255,.05);padding:18px 0}
+.cd-label{font-size:1.2rem;letter-spacing:.2em;text-transform:uppercase;color:var(--a2);margin-bottom:6px}
+.cd-val{font-size:1.1rem;color:var(--off);line-height:1.6}
+
+.contact-card{
+  background:var(--charcoal);border:1px solid var(--border);
+  padding:44px 36px;position:sticky;top:calc(var(--nav-h) + 20px);
+}
+.contact-card h2{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.06em;margin-bottom:24px}
+.ccard-div{width:36px;height:1px;background:var(--a2);margin-bottom:28px}
+.ci{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
+.ci-icon{
+  width:36px;height:36px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(232,130,12,.1);border:1px solid var(--border);color:var(--a2);
+}
+.ci-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.ci-head{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ci-val{font-size:.95rem;color:var(--off);line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo" onclick="nav('home')">
+    <img src="assets/images/logo.jpg" alt="Desert Detailing Studio logo"/>
+    <!-- <div class="nav-brand">D<span>D</span>S</div> -->
+  </div>
+  <ul class="nav-menu" id="nav-menu">
+    <li><button onclick="nav('home')" data-page="home">Home</button></li>
+    <li><button onclick="nav('services')" data-page="services">Services</button></li>
+    <li><button onclick="nav('process')" data-page="process">Process</button></li>
+    <li><button onclick="nav('about')" data-page="about">About Us</button></li>
+    <!-- <li><button onclick="nav('contact')">Contact</button></li> -->
+  </ul>
+  <div class="nav-right">
+    <button class="btn-primary" onclick="nav('contact')" style="padding:8px 16px;font-size:.7rem;letter-spacing:.1em">
+      Let's Talk
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 10l5-5 3 3M10 2H3"/></svg>
+    </button>
+    <!-- <div class="nav-socials">
+      <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.6l6.2 3.4-6.2 3.5z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.6 4.8-4.9 4.9-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C3.9 21.6 2.4 20 2.3 16.8 2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.3 7.2 2.3c1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4A6.2 6.2 0 0012 5.8zM12 16a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z"/></svg></a>
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3-1.9 0-2.2 1.4-2.2 2.9v5.7H9.2V9h3.4v1.6h.1c.5-.9 1.6-1.9 3.4-1.9 3.6 0 4.3 2.4 4.3 5.5v6.3zM5.3 7.4a2.1 2.1 0 110-4.2 2.1 2.1 0 010 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.5C0 23.2.8 24 1.8 24h20.4c1 0 1.8-.8 1.8-1.8V1.7C24 .8 23.2 0 22.2 0z"/></svg></a>
+      <a href="#" aria-label="X"><svg viewBox="0 0 24 24"><path d="M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.6l-4.7-6.2-5.4 6.2H2.7l7.7-8.8L1.3 2.3h6.8l4.3 5.6zm-1.2 17.5h1.8L7.1 4.1H5.1z"/></svg></a>
+    </div> -->
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- FLOATING SOCIAL SIDEBAR -->
+<aside class="social-sidebar" aria-label="Social links">
+  <!-- Call Button - Works on mobile, shows alert on desktop -->
+  <a href="tel:+917222012456" aria-label="Call us" class="call-btn" onclick="if(!navigator.userAgent.match(/Android|iPhone|iPad|iPod|webOS|BlackBerry|Opera Mini|IEMobile/i)){event.preventDefault();alert('Tap to call: +91 7222012456');}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94"/></svg>
+  </a>
+  <!-- WhatsApp Button -->
+  <a href="https://wa.me/917222012456" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <!-- Instagram Button -->
+  <a href="https://instagram.com/desertdetailingstudio" target="_blank" rel="noopener" aria-label="Instagram">
+    <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.6 4.8-4.9 4.9-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C3.9 21.6 2.4 20 2.3 16.8 2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.3 7.2 2.3c1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4A6.2 6.2 0 0012 5.8zM12 16a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z"/></svg>
+  </a>
+  <!-- Gmail Button -->
+  <a href="mailto:desertdetailingstudio@gmail.com" aria-label="Email us">
+    <svg viewBox="0 0 24 24"><path d="M24 5.5v13.9c0 .9-.7 1.6-1.6 1.6h-3.8V11.7L12 16.6l-6.5-4.9v9.3H1.6C.7 21 0 20.3 0 19.4V5.5C0 3.5 2.3 2.3 3.9 3.5L5.5 4.6 12 9.5l6.5-4.9 1.5-1.1C21.7 2.3 24 3.5 24 5.5z"/></svg>
+  </a>
+  <!-- YouTube Button -->
+  <a href="https://www.youtube.com/@desertdetailingstudio" target="_blank" rel="noopener" aria-label="YouTube">
+    <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.7 15.5V8.6l6.2 3.4-6.2 3.5z"/></svg>
+  </a>
+  <!-- Location Button -->
+  <a href="https://maps.app.goo.gl/Zaf9o7quviVZSjMW8" target="_blank" rel="noopener" aria-label="Location">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  </a>
+</aside>
+
+<!-- ══════════════════════════════
+     PAGE: HOME
+══════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <section class="hero" aria-label="Hero">
+    <div class="hero-bg" role="img" aria-label="Luxury car close-up background"></div>
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-slice" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Est. 2026 · Premium Automotive Care · Jaipur</p>
+      <h1 class="hero-title">
+        DESERT<br>
+        <span class="hi">DETAILING</span><br>
+        <span class="stroke">STUDIO</span>
+      </h1>
+      <p class="hero-desc">Mirror The Desert's Glow, Master The Desert's Blow</p>
+    </div>
+    <div class="hero-badge" aria-hidden="true">
+      <div class="hero-badge-inner">PREMIUM<br>·<br>CERTIFIED<br>·<br>CARE</div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip" aria-label="Key stats">
+    <div class="stat"><div class="stat-n">16+</div><div class="stat-l">Years of Experience</div></div>
+    <div class="stat"><div class="stat-n">09</div><div class="stat-l">Stage Process</div></div>
+    <!-- <div class="stat"><div class="stat-n">02</div><div class="stat-l">Workshops</div></div> -->
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Satisfaction</div></div>
+  </div>
+
+  <!-- SERVICE CARDS -->
+  <section class="services-section" aria-labelledby="srv-h">
+    <div class="services-header">
+      <div class="tag" style="justify-content:center">Services</div>
+      <h2 class="section-title" id="srv-h">WHAT WE OFFER</h2>
+      <p class="section-sub">Premium care for every surface, inside and out</p>
+    </div>
+    <div class="cards-grid"> 
+      <article class="scard" onclick="navToService('services-exterior')" tabindex="0" role="button" aria-label="Explore Exterior services">
+        <div class="scard-img">
+          <img src="assets/images/exterior.jpg" alt="Exterior paint correction and polishing"/>
+        </div>
+        <div class="scard-body">
+          <div class="scard-num">01</div>
+          <h3 class="scard-title">EXTERIOR</h3>
+          <p class="scard-desc">PPF film, and Coating for a flawless, long-lasting exterior.</p>
+          <div class="scard-arrow">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </article>
+      <article class="scard" onclick="navToService('services-interior')" tabindex="0" role="button" aria-label="Explore Interior services">
+        <div class="scard-img">
+          <img src="assets/images/interior.jpg" alt="Car interior leather seats detailed"/>
+        </div>
+        <div class="scard-body">
+          <div class="scard-num">02</div>
+          <h3 class="scard-title">INTERIOR</h3>
+          <p class="scard-desc">Deep clean, leather care, steam disinfection and odor reset for a showroom-fresh cabin.</p>
+          <div class="scard-arrow">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </article>
+      <article class="scard" onclick="navToService('services-spa')" tabindex="0" role="button" aria-label="Explore Spa packages">
+        <div class="scard-img">
+          <img src="assets/images/spa.jpg" alt="Full spa detailing treatment on luxury car"/>
+        </div>
+        <div class="scard-body">
+          <div class="scard-num">03</div>
+          <h3 class="scard-title">SPA</h3>
+          <p class="scard-desc">Full luxury treatment combining interior and exterior shine in one package.</p>
+          <div class="scard-arrow">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </article>
+      <article class="scard" onclick="navToService('services-body')" tabindex="0" role="button" aria-label="Explore Body Work services">
+        <div class="scard-img">
+          <img src="assets/images/body_work.jpeg" alt="Body work and panel repair"/>
+        </div>
+        <div class="scard-body">
+          <div class="scard-num">04</div>
+          <h3 class="scard-title">BODY WORK</h3>
+          <p class="scard-desc">Precision dent removal, scratch repair, paint work and body panel restoration for a factory-fresh finish.</p>
+          <div class="scard-arrow">Explore <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PROCESS PREVIEW -->
+  <section class="process-preview" aria-labelledby="pp-h">
+    <div class="services-header">
+      <div class="tag" style="justify-content:center">Method</div>
+      <h2 class="section-title" id="pp-h">SIGNATURE 9-STAGE CARE</h2>
+      <p class="section-sub">Here is the short version of the full DDS detailing roadmap.</p>
+    </div>
+    <div class="process-steps">
+      <article class="pstep">
+        <div class="pstep-num">01</div>
+        <h3 class="pstep-title">ASSESS + PRE-WASH</h3>
+        <p class="pstep-desc">Foam wash and a full inspection to reveal defects and prep surfaces.</p>
+      </article>
+      <article class="pstep">
+        <div class="pstep-num">02</div>
+        <h3 class="pstep-title">CORRECTION + POLISH</h3>
+        <p class="pstep-desc">Multi-stage compounding and refinement to restore depth and clarity.</p>
+      </article>
+      <article class="pstep">
+        <div class="pstep-num">03</div>
+        <h3 class="pstep-title">PROTECT + FINISH</h3>
+        <p class="pstep-desc">Ceramic, PPF, and final dressings lock in gloss and defend against heat.</p>
+      </article>
+    </div>
+    <div class="process-cta">
+      <button class="btn-primary" onclick="nav('process')">View Full Process</button>
+      <button class="btn-outline" onclick="nav('services')">Explore Services</button>
+    </div>
+  </section>
+
+  <!-- WHY DDS -->
+  <section class="why-section" aria-labelledby="why-h">
+    <div class="services-header">
+      <div class="tag" style="justify-content:center">Why DDS</div>
+      <h2 class="section-title" id="why-h">CRAFTED FOR THE DESERT</h2>
+      <p class="section-sub">Heat, dust, and daily use demand obsessive care. We deliver it.</p>
+    </div>
+    <div class="why-grid">
+      <article class="why-card">
+        <div class="why-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 12h6l3-7 3 14 3-7h3"/></svg>
+        </div>
+        <h3 class="why-title">PRECISION PROCESS</h3>
+        <p class="why-desc">A strict, staged workflow built to reveal, correct, and protect every surface.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 3h10l4 6-9 12-9-12z"/></svg>
+        </div>
+        <h3 class="why-title">PREMIUM MATERIALS</h3>
+        <p class="why-desc">Top-grade coatings, films, and tools selected for durability in harsh climates.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+        </div>
+        <h3 class="why-title">QUALITY CONTROL</h3>
+        <p class="why-desc">Inspection lighting, gloss checks, and finish validation before handover.</p>
+      </article>
+      <article class="why-card">
+        <div class="why-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 20v-7l8-9 8 9v7"/><path d="M9 20v-5h6v5"/></svg>
+        </div>
+        <h3 class="why-title">LOCAL EXPERTISE</h3>
+        <p class="why-desc">Built in Jaipur, tuned for harsh conditions and daily driving realities.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- GALLERY
+  <section class="home-gallery" aria-labelledby="gal-h">
+    <div class="services-header">
+      <div class="tag" style="justify-content:center">Work</div>
+      <h2 class="section-title" id="gal-h">SAND TO SILK</h2>
+      <p class="section-sub">Before & After, Shine Stories.</p>
+    </div>
+    <div class="gallery-slider" data-gallery-slider aria-label="Transformation gallery slider" tabindex="0">
+      <button class="gallery-nav prev" type="button" data-gallery-prev aria-label="Previous vehicle">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="gallery-viewport">
+        <div class="gallery-track">
+          <article class="gallery-slide">
+            <div class="gallery-card">
+              <div class="gallery-meta">
+                <div class="gallery-kicker">Vehicle 01</div>
+                <h3 class="gallery-title">Desert Sand SUV</h3>
+                <p class="gallery-desc">Oxidized paint revived with multi-stage correction and ceramic armor for daily heat.</p>
+                <div class="gallery-tags"><span>Correction</span><span>Ceramic</span><span>Interior Reset</span></div>
+              </div>
+              <div class="gallery-pair">
+                <figure class="gallery-frame">
+                  <img src="assets/images/graphene.jpg" alt="SUV paint correction before" draggable="false"/>
+                  <figcaption>Before</figcaption>
+                </figure>
+                <figure class="gallery-frame">
+                  <img src="assets/images/borophene.jpg" alt="SUV paint correction after" draggable="false"/>
+                  <figcaption>After</figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
+          <article class="gallery-slide">
+            <div class="gallery-card">
+              <div class="gallery-meta">
+                <div class="gallery-kicker">Vehicle 02</div>
+                <h3 class="gallery-title">Midnight Luxury Sedan</h3>
+                <p class="gallery-desc">Swirl removal, high-gloss refinement, and cabin restoration for a showroom-grade finish.</p>
+                <div class="gallery-tags"><span>Gloss</span><span>Leather Care</span><span>Sealant</span></div>
+              </div>
+              <div class="gallery-pair">
+                <figure class="gallery-frame">
+                  <img src="assets/images/graphene.jpg" alt="Luxury sedan interior before" draggable="false"/>
+                  <figcaption>Before</figcaption>
+                </figure>
+                <figure class="gallery-frame">
+                  <img src="assets/images/borophene.jpg" alt="Luxury sedan interior after" draggable="false"/>
+                  <figcaption>After</figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
+          <article class="gallery-slide">
+            <div class="gallery-card">
+              <div class="gallery-meta">
+                <div class="gallery-kicker">Vehicle 03</div>
+                <h3 class="gallery-title">Sport Coupe</h3>
+                <p class="gallery-desc">Precision polish, trim revival, and gloss sealing for a deep, glassy finish.</p>
+                <div class="gallery-tags"><span>Polish</span><span>Trim</span><span>Seal</span></div>
+              </div>
+              <div class="gallery-pair">
+                <figure class="gallery-frame">
+                  <img src="assets/images/graphene.jpg" alt="Sport coupe trim before" draggable="false"/>
+                  <figcaption>Before</figcaption>
+                </figure>
+                <figure class="gallery-frame">
+                  <img src="assets/images/borophene.jpg" alt="Sport coupe trim after" draggable="false"/>
+                  <figcaption>After</figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
+          <article class="gallery-slide">
+            <div class="gallery-card">
+              <div class="gallery-meta">
+                <div class="gallery-kicker">Vehicle 04</div>
+                <h3 class="gallery-title">Family Hatch</h3>
+                <p class="gallery-desc">Deep clean, wheel rejuvenation, and ceramic topcoat for easy weekly upkeep.</p>
+                <div class="gallery-tags"><span>Deep Clean</span><span>Wheel Care</span><span>Protection</span></div>
+              </div>
+              <div class="gallery-pair">
+                <figure class="gallery-frame">
+                  <img src="assets/images/graphene.jpg" alt="Family hatch exterior before" draggable="false"/>
+                  <figcaption>Before</figcaption>
+                </figure>
+                <figure class="gallery-frame">
+                  <img src="assets/images/borophene.jpg" alt="Family hatch exterior after" draggable="false"/>
+                  <figcaption>After</figcaption>
+                </figure>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <button class="gallery-nav next" type="button" data-gallery-next aria-label="Next vehicle">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div class="gallery-dots" data-gallery-dots aria-label="Select vehicle"></div>
+    </div>
+  </section> -->
+
+  <!-- CTA -->
+  <section class="cta-banner" aria-label="Book consultation">
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-title">READY FOR DDS-LEVEL SHINE?</h2>
+        <p class="cta-desc">Tell us your vehicle type and goals. We will recommend the right protection plan.</p>
+      </div>
+      <div class="cta-actions">
+        <button class="btn-primary" onclick="nav('contact')">Book Your Shine Today</button>
+        <a class="btn-outline" href="https://wa.me/917222012456" target="_blank" rel="noopener">WhatsApp Us</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <footer>
+    <!-- <div class="footer-logo"><img src="assets/images/logo.jpg" alt="DDS logo" style="width:120px;height:auto;"/> -->
+      <div class="footer-brand" style="font-size:1.4em;font-weight:700;margin-left:15px;">
+        <div>Desert Detailing Studio</div>
+        <div style="font-size:0.65em;font-weight:400;opacity:0.85;margin-top:8px;line-height:1.6;">D-14, Tagore Nagar <br> 200ft Bypass, Ajmer Road <br> Jaipur, Rajasthan - 302021</div>
+      </div>
+    <!-- </div> -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <a href="https://share.google/DYSilKtUYmA8mPG7A" target="_blank" rel="noopener" class="gbp-badge" aria-label="Find us on Google Business Profile">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#4285F4"/><circle cx="12" cy="12" r="3" fill="#EA4335"/><circle cx="12" cy="12" r="2" fill="#FBBC05"/></svg>
+        <span class="gbp-text">Find us on Google</span>
+        <span class="gbp-dot"></span>
+      </a>
+      <p>@2026 DDS workshop. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE: Services
+══════════════════════════════ -->
+<div class="page" id="page-services">
+  <div class="services-hero">
+    <div class="services-hero-bg">
+      <img src="assets/images/stage_9.jpeg" alt="Premium car detailing workshop"/>
+    </div>
+    <div class="services-hero-content">
+      <div class="tag">Enhancement Menu</div>
+      <h1 class="sub-title">OUR <span style="color:var(--a2)">SERVICES</span></h1>
+      <p class="sub-desc">Precision enhancements to elevate every aspect of your vehicle's look and longevity.</p>
+    </div>
+  </div>
+
+  <section class="services-menu" aria-label="Services menu">
+    <div class="service-group" id="services-exterior">
+      <div class="service-group-head">
+        <div>
+          <div class="tag">Exterior</div>
+          <h2 class="service-group-title">EXTERIOR PROTECTION</h2>
+        </div>
+        <div class="service-group-note">Surface defense</div>
+      </div>
+      <div class="service-grid-two">
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/ppf.png" alt="PPF paint protection film installation"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">PPF</h3>
+            <p class="service-tile-desc">Impact-grade film for high-wear panels and gloss retention.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/ceramic.jpg" alt="Ceramic coating applied on car paint"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">CERAMIC COATING</h3>
+            <p class="service-tile-desc">Deep gloss, UV defense, and a hydrophobic finish.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/graphene.jpg" alt="Paint correction and refinement"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">GRAPHENE COATING</h3>
+            <p class="service-tile-desc">Slick, heat-resistant protection with extended durability.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/borophene.jpg" alt="High gloss exterior protection"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">BOROPHENE COATING</h3>
+            <p class="service-tile-desc">Next-gen barrier for extreme gloss and road defense.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="service-group" id="services-interior">
+      <div class="service-group-head">
+        <div>
+          <div class="tag">Interior</div>
+          <h2 class="service-group-title">INTERIOR CARE</h2>
+        </div>
+        <div class="service-group-note">Cabin refresh</div>
+      </div>
+      <div class="service-grid-two">
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/am_foaming.jpeg" alt="Anti-microbial interior foaming"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">ANTI-MICROBIAL FOAMING</h3>
+            <p class="service-tile-desc">Deep foam treatment to neutralize germs and odors.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/ac_vent.jpg" alt="AC vent cleaning"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">AC VENT CLEANING</h3>
+            <p class="service-tile-desc">Targeted vent purge for cleaner, fresher airflow.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/interior_detailing.jpg" alt="Interior detailing and cabin restoration"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">INTERIOR DETAILING</h3>
+            <p class="service-tile-desc">Complete cabin reset with stain, trim, and leather care.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/dressing.jpeg" alt="Interior polishing and dressing"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">POLISHING AND DRESSING</h3>
+            <p class="service-tile-desc">Gloss balance and UV-safe dressing for every surface.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="service-group" id="services-spa">
+      <div class="service-group-head">
+        <div>
+          <div class="tag">Washing and Polishing</div>
+          <h2 class="service-group-title">CAR SPA</h2>
+        </div>
+        <div class="service-group-note">Gloss reset</div>
+      </div>
+      <div class="service-grid-two">
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/full_foam_wash.JPG" alt="Full car foam wash"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">FULL CAR FOAM WASH</h3>
+            <p class="service-tile-desc">Thick foam pre-rinse and hand wash for a safe clean.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/engine.png" alt="Engine deep cleaning"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">ENGINE DEEP CLEANING</h3>
+            <p class="service-tile-desc">Degrease, detail, and protect for a factory-fresh bay.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/chrome_alloy_polish.png" alt="Chrome and alloy polish"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">CHROME AND ALLOY POLISH</h3>
+            <p class="service-tile-desc">Mirror polish for wheels, trims, and metallic accents.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/headlight.png" alt="Headlight polish"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">HEADLIGHT POLISH</h3>
+            <p class="service-tile-desc">Clarity restoration for brighter night visibility.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="service-group" id="services-body">
+      <div class="service-group-head">
+        <div>
+          <div class="tag">Body Work</div>
+          <h2 class="service-group-title">BODY WORK</h2>
+        </div>
+        <div class="service-group-note">Panel craft</div>
+      </div>
+      <div class="service-grid-two">
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/denting_painting.png" alt="Denting and painting"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">DENTING AND PAINTING</h3>
+            <p class="service-tile-desc">Panel correction and paint matching for a flawless finish.</p>
+          </div>
+        </article>
+        <article class="service-tile">
+          <img class="service-tile-img" src="assets/images/mods_accesories.png" alt="Automotive mods and accessories"/>
+          <div class="service-tile-content">
+            <h3 class="service-tile-title">MODS AND ACCESSORIES</h3>
+            <p class="service-tile-desc">Premium add-ons and upgrades fitted with precision.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+  <footer>
+    <!-- <div class="footer-logo"><img src="assets/images/logo.jpg" alt="DDS logo" style="width:120px;height:auto;"/> -->
+      <div class="footer-brand" style="font-size:1.4em;font-weight:700;margin-left:15px;">
+        <div>Desert Detailing Studio</div>
+        <div style="font-size:0.65em;font-weight:400;opacity:0.85;margin-top:8px;line-height:1.6;">D-14, Tagore Nagar <br> 200ft Bypass, Ajmer Road <br> Jaipur, Rajasthan - 302021</div>
+      </div>
+    <!-- </div> -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <a href="https://share.google/DYSilKtUYmA8mPG7A" target="_blank" rel="noopener" class="gbp-badge" aria-label="Find us on Google Business Profile">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#4285F4"/><circle cx="12" cy="12" r="3" fill="#EA4335"/><circle cx="12" cy="12" r="2" fill="#FBBC05"/></svg>
+        <span class="gbp-text">Find us on Google</span>
+        <span class="gbp-dot"></span>
+      </a>
+      <p>@2026 DDS workshop. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE: PROCESS
+══════════════════════════════ -->
+<div class="page" id="page-process">
+  <div class="process-hero process-hero--drive">
+    <div class="process-hero-bg">
+      <img src="assets/images/headlight.png" alt="Detailing workshop in operation"/>
+    </div>
+    <div class="process-hero-grid" aria-hidden="true"></div>
+    <div class="process-hero-content">
+      <div class="tag" style="justify-content:flex-start">Methodology</div>
+      <h1>OUR SIGNATURE<br><span>9-STAGE</span><br>PROCESS</h1>
+      <p>Every vehicle receives the same uncompromising, systematic care — no shortcuts, no exceptions.</p>
+      <div class="process-hero-meta">9 precise stages · zero shortcuts</div>
+    </div>
+  </div>
+
+  <section class="process-road" aria-label="9-stage detailing process">
+    <div class="process-intro">
+      <div class="tag">The Process</div>
+      <h2 class="section-title">A ROADMAP OF PRECISION</h2>
+      <p class="section-sub">An ordered, visual flow that moves from surface discovery to final delivery.</p>
+    </div>
+    <div class="process-track">
+      <article class="process-stage is-right">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 01</div>
+          <h3 class="stage-title">INITIAL ASSESSMENT AND PREMIUM WASH</h3>
+          <p class="stage-desc">A full walk-around inspection, foam pre-rinse, and two-bucket wash reveal the true surface before correction begins.</p>
+          <div class="stage-tags"><span>Assessment</span><span>Foam Rinse</span><span>Two-Bucket</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_1.jpg" alt="Initial assessment and premium wash"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-left">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 02</div>
+          <h3 class="stage-title">CLAY BAR APPLICATION</h3>
+          <p class="stage-desc">A lubricated clay glide removes bonded contaminants for a glass-smooth finish ready for deeper prep.</p>
+          <div class="stage-tags"><span>Decontaminate</span><span>Smooth Surface</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_2.png" alt="Clay bar application"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-right">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 03</div>
+          <h3 class="stage-title">DEEP CLEANING AND SURFACE PREPARATION</h3>
+          <p class="stage-desc">Iron fallout removal, tar treatment, and panel cleansing reset the paint for perfect bonding.</p>
+          <div class="stage-tags"><span>Iron Fallout</span><span>Tar Removal</span><span>Panel Prep</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_3.jpg" alt="Deep cleaning and surface preparation"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-left">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 04</div>
+          <h3 class="stage-title">COMPOUNDING, POLISHING, AND IPA</h3>
+          <p class="stage-desc">Multi-stage correction refines gloss, then an IPA wipe-down reveals pure, inspection-ready clarity.</p>
+          <div class="stage-tags"><span>Correction</span><span>Gloss</span><span>IPA Wipe</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_4.png" alt="Compounding, polishing, and IPA wipe"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-right">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 05</div>
+          <h3 class="stage-title">EXTERIOR PROTECTION APPLICATION</h3>
+          <p class="stage-desc">Ceramic coating or sealant is applied panel by panel to lock in gloss and hydrophobic protection.</p>
+          <div class="stage-tags"><span>Ceramic</span><span>Sealant</span><span>Hydrophobic</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_5.png" alt="Exterior protection application"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-left">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 06</div>
+          <h3 class="stage-title">GLASS COATING</h3>
+          <p class="stage-desc">Glass is polished, de-greased, and coated for clarity, safer wet-weather visibility, and easy cleaning.</p>
+          <div class="stage-tags"><span>Clarity</span><span>Safety</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_6.png" alt="Glass coating"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-right">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 07</div>
+          <h3 class="stage-title">INTERIOR COATING AND SANITISATION</h3>
+          <p class="stage-desc">Steam, fabric treatment, leather care, and antimicrobial protection elevate the cabin.</p>
+          <div class="stage-tags"><span>Steam</span><span>Leather Care</span><span>Sanitise</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_7.png" alt="Interior coating and sanitisation"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-left">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 08</div>
+          <h3 class="stage-title">PRODUCT CURING AND ACCESSORIES INTEGRATION</h3>
+          <p class="stage-desc">Coatings cure under controlled heat while trim, tires, badges, and accessories are finished.</p>
+          <div class="stage-tags"><span>Cure</span><span>Trim Finish</span><span>Accessories</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_8.png" alt="Product curing and accessories integration"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+
+      <article class="process-stage is-right">
+        <div class="stage-copy">
+          <div class="stage-kicker">Stage 09</div>
+          <h3 class="stage-title">QUALITY INSPECTION AND HANDOVER</h3>
+          <p class="stage-desc">High-intensity lighting confirms flawless results before final photography and handover.</p>
+          <div class="stage-tags"><span>Inspection</span><span>Photography</span><span>Handover</span></div>
+        </div>
+        <div class="stage-visual">
+          <div class="car-card">
+            <div class="car-frame"><img class="car-photo" src="assets/images/stage_9.jpeg" alt="Quality inspection and handover"/></div>
+            <div class="car-road" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="stage-node" aria-hidden="true"></div>
+        <div class="stage-connector" aria-hidden="true"></div>
+      </article>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+  <footer>
+    <!-- <div class="footer-logo"><img src="assets/images/logo.jpg" alt="DDS logo" style="width:120px;height:auto;"/> -->
+      <div class="footer-brand" style="font-size:1.4em;font-weight:700;margin-left:15px;">
+        <div>Desert Detailing Studio</div>
+        <div style="font-size:0.65em;font-weight:400;opacity:0.85;margin-top:8px;line-height:1.6;">D-14, Tagore Nagar <br> 200ft Bypass, Ajmer Road <br> Jaipur, Rajasthan - 302021</div>
+      </div>
+    <!-- </div> -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <a href="https://share.google/DYSilKtUYmA8mPG7A" target="_blank" rel="noopener" class="gbp-badge" aria-label="Find us on Google Business Profile">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#4285F4"/><circle cx="12" cy="12" r="3" fill="#EA4335"/><circle cx="12" cy="12" r="2" fill="#FBBC05"/></svg>
+        <span class="gbp-text">Find us on Google</span>
+        <span class="gbp-dot"></span>
+      </a>
+      <p>@2026 DDS workshop. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE: ABOUT
+══════════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-text">
+      <div class="tag" style="margin-bottom:16px">Our Story</div>
+      <h1 class="about-h1">We Are<br><span class="hi">DDS</h1>
+      <p class="about-para"><span class="about-tagline">Born in the desert, Built for shine.</span> <strong class="hi">Desert Detailing Studio</strong> was built on a single conviction: every car deserves to look extraordinary, even under Jaipur heat and dust. Our single workshop blends premium materials, skilled hands, and strict inspection standards to deliver real, lasting shine.</p>
+      <p class="about-para">We specialize in PPF, paint correction, ceramic coatings, interior restoration, and full detailing packages. Every vehicle follows a staged process designed to reveal defects, correct them, and lock in protection.</p>
+      <p class="about-para">Whether it is a daily driver or a weekend machine, we build the plan around your car, your climate, and your finish goals.</p>
+    </div>
+    <div class="about-visual">
+      <img src="assets/images/ppf.png" alt="Premium car in DDS workshop ready for detailing"/>
+    </div>
+  </div>
+
+  
+  <div class="divider"></div>
+  <footer>
+    <!-- <div class="footer-logo"><img src="assets/images/logo.jpg" alt="DDS logo" style="width:120px;height:auto;"/> -->
+      <div class="footer-brand" style="font-size:1.4em;font-weight:700;margin-left:15px;">
+        <div>Desert Detailing Studio</div>
+        <div style="font-size:0.65em;font-weight:400;opacity:0.85;margin-top:8px;line-height:1.6;">D-14, Tagore Nagar <br> 200ft Bypass, Ajmer Road <br> Jaipur, Rajasthan - 302021</div>
+      </div>
+    <!-- </div> -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <a href="https://share.google/DYSilKtUYmA8mPG7A" target="_blank" rel="noopener" class="gbp-badge" aria-label="Find us on Google Business Profile">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#4285F4"/><circle cx="12" cy="12" r="3" fill="#EA4335"/><circle cx="12" cy="12" r="2" fill="#FBBC05"/></svg>
+        <span class="gbp-text">Find us on Google</span>
+        <span class="gbp-dot"></span>
+      </a>
+      <p>@2026 DDS workshop. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE: CONTACT
+══════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-hero">
+    <img src="assets/images/dressing.jpeg" alt="DDS workshop professional setting"/>
+    <div class="contact-hero-text">
+      <h1>LET'S<span>TALK</span></h1>
+      <p>Whether it's your first detail or your fifth — we're ready to make your car extraordinary.</p>
+    </div>
+  </div>
+
+  <div class="contact-body">
+    <div class="contact-details">
+      <div class="tag" style="margin-bottom:24px;font-size:1rem;letter-spacing:.2em">Get In Touch</div>
+      <div class="cd-item"><div class="cd-label">Address</div><div class="cd-val">D-14, Tagore Nagar,<br>200ft Byass, Ajmer Road<br>Jaipur, Rajasthan — 302021</div></div>
+      <div class="cd-item"><div class="cd-label">Working Hours</div><div class="cd-val">Monday – Sunday: 9:30 AM – 8:00 PM</div></div>
+      <div class="cd-item"><div class="cd-label">Phone</div><div class="cd-val">+91 722201245</div></div>
+      <div class="cd-item"><div class="cd-label">Email</div><div class="cd-val">desertdetailingstudio@gmail.com</div></div>
+    </div>
+
+    <div class="contact-card">
+      <h2 style="text-align:center;margin-bottom:18px;font-family:var(--font-display);font-size:2rem;letter-spacing:.08em;color:var(--a2);text-shadow:0 2px 12px rgba(200,88,26,0.08)">Reach Us</h2>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:22px">
+        <!-- Google Map Embed (zoomed, single marker, on-brand border) -->
+        <div style="width:100%;max-width:340px;height:210px;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(200,88,26,0.13);border:2px solid var(--a2);background:var(--deep)">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.964964964964!2d75.7355273!3d26.8919879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db500579067db%3A0xe105cbd98ac33724!2sDesert%20Detailing%20Studio!5e0!3m2!1sen!2sin!4v1713960000000!5m2!1sen!2sin" width="100%" height="210" style="border:0;filter:contrast(1.08) saturate(1.1);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Desert Detailing Studio Location"></iframe>
+        </div>
+        <!-- Funky Scan Me Label
+        <div style="display:flex;align-items:center;gap:10px;margin-top:2px;margin-bottom:-8px">
+          <span style="font-family:var(--font-display);font-size:1.1rem;color:var(--a1);letter-spacing:.12em;transform:rotate(-7deg);background:var(--deep);padding:2px 10px 2px 0;border-radius:8px 0 0 8px;box-shadow:0 2px 8px rgba(245,160,48,0.10)">Scan me for<br>location!</span>
+          <svg width="32" height="32" viewBox="0 0 32 32" style="transform:rotate(18deg) scaleX(-1);margin-left:-8px" fill="none" stroke="var(--a2)" stroke-width="3"><path d="M2 30 Q18 18 30 2"/></svg>
+        </div>
+        <!-- QR Code -->
+        <!-- <img src="assets/images/location-qr.png" alt="Scan to open location in Google Maps" style="width:120px;height:120px;border-radius:16px;box-shadow:0 4px 16px rgba(200,88,26,0.13);border:2px solid var(--a2);background:var(--white)"> --> 
+        <!-- Button to Google Maps -->
+        <a href="https://maps.app.goo.gl/Zaf9o7quviVZSjMW8" target="_blank" rel="noopener" class="btn-primary" style="width:100%;justify-content:center;margin-top:10px;font-size:.75em;letter-spacing:.08em;background:var(--a2);color:var(--black);border-radius:8px;box-shadow:0 2px 12px rgba(200,88,26,0.10)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:7px" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Open in Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <footer>
+    <!-- <div class="footer-logo"><img src="assets/images/logo.jpg" alt="DDS logo" style="width:120px;height:auto;"/> -->
+      <div class="footer-brand" style="font-size:1.4em;font-weight:700;margin-left:15px;">
+        <div>Desert Detailing Studio</div>
+        <div style="font-size:0.65em;font-weight:400;opacity:0.85;margin-top:8px;line-height:1.6;">D-14, Tagore Nagar <br> 200ft Bypass, Ajmer Road <br> Jaipur, Rajasthan - 302021</div>
+      </div>
+    <!-- </div> -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <a href="https://share.google/DYSilKtUYmA8mPG7A" target="_blank" rel="noopener" class="gbp-badge" aria-label="Find us on Google Business Profile">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#4285F4"/><circle cx="12" cy="12" r="3" fill="#EA4335"/><circle cx="12" cy="12" r="2" fill="#FBBC05"/></svg>
+        <span class="gbp-text">Find us on Google</span>
+        <span class="gbp-dot"></span>
+      </a>
+      <p>@2026 DDS workshop. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+function setActiveNav(page) {
+  document.querySelectorAll('.nav-menu button[data-page]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.page === page);
+  });
+}
+
+function showPage(page, updateHash = true) {
+  const targetId = `page-${page}`;
+  const pages = document.querySelectorAll('.page');
+  let found = false;
+
+  pages.forEach((section) => {
+    const isTarget = section.id === targetId;
+    section.classList.toggle('active', isTarget);
+    if (isTarget) {
+      found = true;
+    }
+  });
+
+  if (!found) {
+    console.warn(`No page found for ${targetId}`);
+  }
+
+  setActiveNav(page);
+
+  const navMenu = document.getElementById('nav-menu');
+  if (navMenu) {
+    navMenu.classList.remove('open');
+  }
+
+  if (updateHash) {
+    const newHash = `#${page}`;
+    if (window.location.hash !== newHash) {
+      window.location.hash = newHash;
+    }
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nav(page) {
+  showPage(page, true);
+}
+
+function navToService(sectionId) {
+  showPage('services', true);
+  if (!sectionId) {
+    return;
+  }
+  window.setTimeout(() => {
+    const target = document.getElementById(sectionId);
+    if (!target) {
+      return;
+    }
+    const offset = 90;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }, 60);
+}
+
+function toggleMenu() {
+  const navMenu = document.getElementById('nav-menu');
+  if (navMenu) {
+    navMenu.classList.toggle('open');
+  }
+}
+
+function getPageFromHash() {
+  return window.location.hash.replace('#', '').trim();
+}
+
+window.addEventListener('hashchange', () => {
+  const page = getPageFromHash();
+  if (page) {
+    showPage(page, false);
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const page = getPageFromHash() || 'home';
+  showPage(page, !getPageFromHash());
+  const stageEls = document.querySelectorAll('.process-stage');
+  if (stageEls.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+    stageEls.forEach((stage) => observer.observe(stage));
+  }
+
+  const gallery = document.querySelector('[data-gallery-slider]');
+  if (gallery) {
+    const track = gallery.querySelector('.gallery-track');
+    const slides = Array.from(gallery.querySelectorAll('.gallery-slide'));
+    const prevBtn = gallery.querySelector('[data-gallery-prev]');
+    const nextBtn = gallery.querySelector('[data-gallery-next]');
+    const dotsWrap = gallery.querySelector('[data-gallery-dots]');
+    const viewport = gallery.querySelector('.gallery-viewport');
+    let index = 0;
+    let currentTranslate = 0;
+    let isDragging = false;
+    let startX = 0;
+
+    const getSlideWidth = () => viewport.getBoundingClientRect().width;
+
+    const setTranslate = (value, animate = true) => {
+      track.style.transition = animate ? 'transform .6s var(--ease)' : 'none';
+      track.style.transform = `translateX(${value}px)`;
+    };
+
+    const updateDots = () => {
+      const dots = dotsWrap.querySelectorAll('button');
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('active', dotIndex === index);
+      });
+    };
+
+    const goTo = (nextIndex, animate = true) => {
+      const count = slides.length;
+      index = (nextIndex + count) % count;
+      currentTranslate = -index * getSlideWidth();
+      setTranslate(currentTranslate, animate);
+      updateDots();
+    };
+
+    if (dotsWrap && slides.length) {
+      slides.forEach((_, dotIndex) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Go to vehicle ${dotIndex + 1}`);
+        dot.addEventListener('click', () => goTo(dotIndex));
+        dotsWrap.appendChild(dot);
+      });
+    }
+
+    prevBtn?.addEventListener('click', () => goTo(index - 1));
+    nextBtn?.addEventListener('click', () => goTo(index + 1));
+
+    viewport.addEventListener('pointerdown', (event) => {
+      isDragging = true;
+      startX = event.clientX;
+      viewport.setPointerCapture(event.pointerId);
+      track.style.transition = 'none';
+    });
+
+    viewport.addEventListener('pointermove', (event) => {
+      if (!isDragging) {
+        return;
+      }
+      const delta = event.clientX - startX;
+      setTranslate(currentTranslate + delta, false);
+    });
+
+    const endDrag = (event) => {
+      if (!isDragging) {
+        return;
+      }
+      isDragging = false;
+      const delta = event.clientX - startX;
+      const threshold = getSlideWidth() * 0.18;
+      if (delta < -threshold) {
+        goTo(index + 1);
+        return;
+      }
+      if (delta > threshold) {
+        goTo(index - 1);
+        return;
+      }
+      goTo(index);
+    };
+
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    window.addEventListener('resize', () => goTo(index, false));
+
+    gallery.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        goTo(index - 1);
+      }
+      if (event.key === 'ArrowRight') {
+        goTo(index + 1);
+      }
+    });
+
+    goTo(0, false);
+  }
+});
+
+</script>
+</body>
+</html>
